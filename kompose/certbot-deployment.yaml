@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\Users\tejsk\Downloads\kompose-windows-amd64.exe --file ..\Nextcloud\Sync\Faks 3.letnik\DevOps\docker\compose.yaml convert
+    kompose.version: 1.37.0 (fb0539e64)
+  labels:
+    io.kompose.service: certbot
+  name: certbot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: certbot
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\Users\tejsk\Downloads\kompose-windows-amd64.exe --file ..\Nextcloud\Sync\Faks 3.letnik\DevOps\docker\compose.yaml convert
+        kompose.version: 1.37.0 (fb0539e64)
+      labels:
+        io.kompose.service: certbot
+    spec:
+      containers:
+        - args:
+            - certonly
+            - --test-cert
+            - --dns-cloudflare
+            - --dns-cloudflare-credentials
+            - /etc/letsencrypt/cloudflare.ini
+            - --dns-cloudflare-propagation-seconds
+            - "30"
+            - --non-interactive
+            - --keep-until-expiring
+            - --agree-tos
+            - --register-unsafely-without-email
+            - -d
+            - 2jz.space
+          image: certbot/dns-cloudflare:latest
+          name: certbot
+          volumeMounts:
+            - mountPath: /etc/letsencrypt/cloudflare.ini
+              name: certbot-cm1
+              readOnly: true
+              subPath: cloudflare.ini
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: cloudflare.ini
+                path: cloudflare.ini
+            name: certbot-cm1
+          name: certbot-cm1

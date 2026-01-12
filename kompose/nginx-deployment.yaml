@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\Users\tejsk\Downloads\kompose-windows-amd64.exe --file ..\Nextcloud\Sync\Faks 3.letnik\DevOps\docker\compose.yaml convert
+    kompose.version: 1.37.0 (fb0539e64)
+  labels:
+    io.kompose.service: nginx
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: nginx
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\Users\tejsk\Downloads\kompose-windows-amd64.exe --file ..\Nextcloud\Sync\Faks 3.letnik\DevOps\docker\compose.yaml convert
+        kompose.version: 1.37.0 (fb0539e64)
+      labels:
+        io.kompose.service: nginx
+    spec:
+      containers:
+        - image: nginx
+          name: nginx
+          ports:
+            - containerPort: 80
+              protocol: TCP
+            - containerPort: 443
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /etc/nginx/conf.d
+              name: nginx-cm0
+              readOnly: true
+            - mountPath: /etc/nginx/nginx.conf
+              name: nginx-cm1
+              readOnly: true
+              subPath: nginx.conf
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            name: nginx-cm0
+          name: nginx-cm0
+        - configMap:
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+            name: nginx-cm1
+          name: nginx-cm1
