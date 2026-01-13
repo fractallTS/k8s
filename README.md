@@ -101,12 +101,13 @@ PostgreSQL + Redis
 ├── MIGRATION.md                # Docker→K8s migration details
 ├── ROLLING_UPDATE_DEMO.md      # Zero-downtime deployment demonstration
 ├── .gitignore                  # Git ignore patterns
-└── docker/                     # Original Docker Compose setup (reference)
-    ├── app/
-    │   ├── app.py              # Flask app V1
-    │   ├── app-v2.py           # Flask app V2 (for rolling update demo)
-    │   └── Dockerfile          # Multi-stage build
-    └── .github/workflows/      # CI/CD pipeline
+├── app/                        # Flask application source
+│   ├── app.py                  # Flask app V1
+│   ├── app-v2.py               # Flask app V2 (for rolling update demo)
+│   ├── Dockerfile              # Multi-stage build
+│   └── requirements.txt        # Python dependencies
+└── .github/workflows/          # CI/CD pipeline
+    └── build-and-push.yml      # Automated image builds
 ```
 
 ## Quick Start
@@ -125,7 +126,7 @@ image: ghcr.io/your-username/your-repo-app:latest
 
 **Building the image:**
 ```bash
-cd docker/app
+cd app
 docker build -t ghcr.io/your-username/your-repo-app:latest .
 docker push ghcr.io/your-username/your-repo-app:latest
 ```
@@ -188,15 +189,15 @@ kubectl logs -n ecommerce -l app=traefik -f
 
 ### Secrets (01-secrets.yaml)
 
-Already configured with values from `docker/secrets/`:
+Already configured with credentials:
 - ✅ Database credentials (user, password, name)
 - ✅ Cloudflare API token
 
-**Values are base64 encoded from:**
-- `docker/secrets/db_user` → ecomuser
-- `docker/secrets/db_name` → ecommerce
-- `docker/secrets/db_password` → (actual password)
-- `docker/secrets/cloudflare.ini` → CyFvVlCwZyr4XDl6ut4R2vmEwB83nGOPgCzuCeqP
+**Current values (base64 encoded):**
+- Database user: ecomuser
+- Database name: ecommerce
+- Database password: (configured)
+- Cloudflare API token: (configured)
 
 ### Domain Configuration
 

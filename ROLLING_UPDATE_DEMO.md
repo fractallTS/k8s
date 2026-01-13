@@ -166,10 +166,10 @@ Build and push the v2 image:
 
 ```bash
 # Copy v2 code over v1
-cp docker/app/app-v2.py docker/app/app.py
+cp app/app-v2.py app/app.py
 
 # Build v2 image
-cd docker/app
+cd app
 docker build -t ghcr.io/YOUR_OWNER/YOUR_REPO-app:v2 .
 docker push ghcr.io/YOUR_OWNER/YOUR_REPO-app:v2
 

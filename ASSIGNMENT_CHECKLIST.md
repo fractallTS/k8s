@@ -174,7 +174,7 @@ kubectl get pvc -n ecommerce
 
 Flask application uses multi-stage Dockerfile:
 
-**File**: [docker/app/Dockerfile](docker/app/Dockerfile)
+**File**: [app/Dockerfile](app/Dockerfile)
 
 ```dockerfile
 FROM python:3.12-slim AS builder
@@ -332,8 +332,8 @@ Created Flask app v2 with visible differences:
 ```
 
 **Files**:
-- V1: [docker/app/app.py](docker/app/app.py)
-- V2: [docker/app/app-v2.py](docker/app/app-v2.py)
+- V1: [app/app.py](app/app.py)
+- V2: [app/app-v2.py](app/app-v2.py)
 
 #### Documentation
 
