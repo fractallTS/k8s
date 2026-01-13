@@ -1,0 +1,96 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  namespace: ecommerce
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1        # Allow 1 extra pod during update (infrastructure can accommodate)
+      maxUnavailable: 0  # Cannot tolerate less than 3 replicas - ensures zero downtime
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+      - name: flask-app
+        # Image from GHCR - matches docker-compose setup
+        # If you have GitHub Actions running, it builds: ghcr.io/${GITHUB_OWNER}/${GITHUB_REPO}-app:latest
+        # To build manually:
+        #   docker build -t ghcr.io/YOUR_OWNER/YOUR_REPO-app:latest ./docker/app
+        #   docker push ghcr.io/YOUR_OWNER/YOUR_REPO-app:latest
+        # Or use a local registry for testing
+        image: ghcr.io/REPLACE_GITHUB_OWNER/REPLACE_REPO_NAME-app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+          name: http
+        env:
+        - name: DB_HOST
+          value: "db"
+        - name: REDIS_HOST
+          value: "redis"
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: db_name
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: db_user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: db_password
+        - name: DB_CONNECT_TIMEOUT
+          value: "3"
+        - name: REDIS_CONNECT_TIMEOUT
+          value: "3"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app
+  namespace: ecommerce
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5000
+    targetPort: 5000
+    protocol: TCP
+    name: http
+  selector:
+    app: flask-app

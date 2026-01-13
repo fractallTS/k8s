@@ -1,0 +1,27 @@
+# Claude Code settings (not part of project)
+.claude/
+
+# Ignore secret files with actual credentials
+*-secrets.yaml
+secrets.yaml
+*.secret
+
+# Ignore environment-specific files
+*.local.yaml
+*.prod.yaml
+*.dev.yaml
+
+# Ignore backup files
+*.bak
+*.backup
+
+# Ignore generated files
+*.generated.yaml
+
+# Rolling update demo logs
+monitor-*.log
+rolling-update-*.log
+*.cast
+
+# macOS
+.DS_Store
