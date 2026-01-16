@@ -170,18 +170,18 @@ cp app/app-v2.py app/app.py
 
 # Build v2 image
 cd app
-docker build -t ghcr.io/YOUR_OWNER/YOUR_REPO-app:v2 .
-docker push ghcr.io/YOUR_OWNER/YOUR_REPO-app:v2
+docker build -t ghcr.io/fractallts/docker-app:v2 .
+docker push ghcr.io/fractallts/docker-app:v2
 
 # Return to repo root
-cd ../..
+cd ..
 ```
 
 Update the deployment to use v2:
 
 ```bash
 # Option 1: Update image in manifest
-kubectl set image deployment/app flask-app=ghcr.io/YOUR_OWNER/YOUR_REPO-app:v2 -n ecommerce
+kubectl set image deployment/app flask-app=ghcr.io/fractallts/docker-app:v2 -n ecommerce
 
 # Option 2: Edit the deployment directly
 kubectl edit deployment app -n ecommerce

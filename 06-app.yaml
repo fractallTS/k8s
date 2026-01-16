@@ -27,7 +27,7 @@ spec:
         #   docker build -t ghcr.io/YOUR_OWNER/YOUR_REPO-app:latest ./docker/app
         #   docker push ghcr.io/YOUR_OWNER/YOUR_REPO-app:latest
         # Or use a local registry for testing
-        image: ghcr.io/REPLACE_GITHUB_OWNER/REPLACE_REPO_NAME-app:latest
+        image: ghcr.io/fractallts/docker-app:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
