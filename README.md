@@ -7,6 +7,7 @@ Production-ready Kubernetes deployment for an e-commerce API stack with PostgreS
 - Quick Start: See [QUICKSTART.md](QUICKSTART.md)
 - Migration Guide: See [MIGRATION.md](MIGRATION.md) for Docker→Kubernetes migration details
 - **Rolling Update Demo**: See [ROLLING_UPDATE_DEMO.md](ROLLING_UPDATE_DEMO.md) for zero-downtime deployment demonstration
+- **Rolling Update Demo Video**: See [Demo_Video.mp4](Demo_Video.mp4)
 - Deployment Script: Run `./deploy.sh` for automated deployment
 - Cleanup Script: Run `./uninstall.sh` to remove everything
 - Demo Script: Run `./demo-rolling-update.sh` for automated rolling update test
