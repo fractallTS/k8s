@@ -1,0 +1,48 @@
+# Traefik IngressRoute Configuration
+# This configures routing and automatic TLS for the ecommerce application
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ecommerce-web
+  namespace: ecommerce
+spec:
+  entryPoints:
+  - web
+  routes:
+  - match: Host(`2jz.space`)
+    kind: Rule
+    services:
+    - name: nginx
+      port: 80
+    middlewares:
+    - name: redirect-to-https
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ecommerce-websecure
+  namespace: ecommerce
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - match: Host(`2jz.space`)
+    kind: Rule
+    services:
+    - name: nginx
+      port: 80
+  tls:
+    certResolver: cloudflare
+    domains:
+    - main: 2jz.space
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-to-https
+  namespace: ecommerce
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
